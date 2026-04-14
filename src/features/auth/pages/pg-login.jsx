@@ -1,6 +1,10 @@
+import LoginForm from "../components/comp-login-form";
+
 const Login = () => {
     return (
-        <h1> login page </h1>
+        <div className="h-screen flex justify-center items-center">
+            <LoginForm />
+        </div>
     );
 };
 
