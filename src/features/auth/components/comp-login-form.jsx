@@ -1,8 +1,14 @@
+import { useNavigate } from "react-router-dom";
 import AppLogo from "../../../components/app-logo";
 import AppSubmitButton from "../../../components/comp-app-button";
 import AppTextInput from "../../../components/comp-app-input";
 
 const LoginForm = () => {
+    const navigate = useNavigate();
+
+    const handleLogin = (e) => {
+        navigate("/super-admin")
+    }
 
     return (
        <div className="flex flex-col items-center justify-center p-10 border-gray-300 gap-4 mb-7">
@@ -22,6 +28,7 @@ const LoginForm = () => {
             <AppSubmitButton 
                 name="Login"
                 className='mt-3'
+                onClick={handleLogin}
             />
            </form>
        </div>
