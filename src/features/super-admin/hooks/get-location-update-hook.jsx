@@ -4,7 +4,7 @@ import { subscribeToTopic } from "../../../configuration/stom-client";
 import { WEB_SOCKET_ENDPOINTS } from "../../../configuration/api-config";
 import { updateLocation } from "../reducer/car-tracking-slice";
 
-export const getLocationUpdateHook = ({ wayId , isConnected}) => {
+export const useLocationUpdateHook = ({ wayId , isConnected}) => {
     const dispatch = useDispatch();
 
     useEffect(() => {

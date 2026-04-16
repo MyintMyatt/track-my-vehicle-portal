@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 
 const initState = {
-    vehicleLocationInfo : { wayId : null, lat : 0 , lng : 1},
+    vehicleLocationInfo : { wayId : null, lat :  16.8409, lng : 96.1735},
     isConnected : false
 }
 
