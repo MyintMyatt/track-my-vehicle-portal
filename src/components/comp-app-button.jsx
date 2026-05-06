@@ -1,4 +1,7 @@
-const AppSubmitButton = ({
+import { ChevronLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+export const AppSubmitButton = ({
     name,
     type = "submit",
     onClick,
@@ -27,4 +30,36 @@ const AppSubmitButton = ({
     );
 };
 
-export default AppSubmitButton;
+export const AppAddNewButton = ({
+    text,
+    icon,
+    disabled = false,
+    onClick
+}) => {
+    return (
+        <button
+        onClick={onClick}
+        disabled={disabled}
+        className={
+            `flex gap-2 bg-indigo-600 w-fit p-3 px-5 rounded-md hover:bg-indigo-700 text-white`
+        }
+        >
+            <span>{text}</span>
+            {icon}
+        </button>
+    );
+};
+
+export const AppBackButton = ({
+    onClick
+}) => {
+    const navigate = useNavigate();
+    return(
+        <div
+        className="flex items-center gap-2 text-indigo-500 hover:text-indigo-700 mb-5"
+        onClick={() => navigate(-1)}>
+            <ChevronLeft size={28}/>
+            <span>Back</span>
+        </div>
+    );
+}
