@@ -41,6 +41,7 @@ export const AppFormInput = (
                 outline-none   transition
                 ${error ? 'border-red-500 transition-all' : 'border-slate-300 focus:border-slate-400 focus:ring-1 focus:ring-slate-300/50'}
                 ${className}
+                ${inputValue ? 'pr-8' : ''}
                 ${disabled ? 'bg-slate-100' : 'bg-white'}
                 `}
             >
@@ -61,6 +62,7 @@ export const AppFormInput = (
                 outline-none   transition
                 ${error ? 'border-red-500 transition-all' : 'border-slate-300 focus:border-slate-400 focus:ring-1 focus:ring-slate-300/50'}
                 ${className}
+                ${inputValue ? 'pl-8' : ''}
                 ${disabled ? 'bg-slate-100' : 'bg-white'}
                 `}
                 >
@@ -71,7 +73,7 @@ export const AppFormInput = (
                     <button
                         type="button"
                         onClick={handleClear}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-red-400 hover:text-red-700"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-red-700 hover:text-red-800"
                     >
                         <X size={16} />
                     </button>
@@ -84,7 +86,7 @@ export const AppFormInput = (
 
         </div>
     );
-}
+};
 
 export const AppFormInputRow = ({
     label,
@@ -94,6 +96,19 @@ export const AppFormInputRow = ({
     return (
         <div className="w-full flex items-start gap-10 justify-around my-4">
             <span className="flex-1">{label} {isMandatoryField && <span className="text-red-500"> *</span>}</span>
+            {child}
+        </div>
+    );
+};
+
+
+export const AppFormInputCol = ({
+    title,
+    child,
+}) => {
+    return (
+        <div className="flex flex-col gap-2 min-w-0">
+            <span>{title}</span>
             {child}
         </div>
     );

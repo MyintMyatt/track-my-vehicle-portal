@@ -3,9 +3,11 @@ import MapBaseLayout from "../../../layout/lyt-map-layout";
 import LocationMaker from "../../map/components/comp-location-maker";
 
 const LocationPickerModal = (
-    {   open,
+    { open,
         onClose,
-        onConfirm }
+        onConfirm,
+        loading = false
+    }
 ) => {
     const [selectedPoint, setSelectedPoint] = useState(null);
     if (!open) return null;
@@ -33,7 +35,11 @@ const LocationPickerModal = (
                         onClick={() => onConfirm(selectedPoint)}
                         className="bg-indigo-500 text-sm text-white p-2 px-4 rounded-md"
                     >
-                        Confirm
+                        {!loading ? 'Confirm' : <div className="flex justify-center items-center gap-2">
+                            <div className="border-white border-2 border-t-transparent animate-spin w-4 h-4 rounded-full">
+                            </div>
+                            Processing....
+                        </div>}
                     </button>
                 </div>
             </div>
