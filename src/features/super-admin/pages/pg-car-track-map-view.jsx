@@ -82,7 +82,7 @@ const CarTrackMapView = () => {
                 )}
 
                 {/* current location */}
-                {/* <CurrentLocationMarker /> */}
+                <CurrentLocationMarker />
             </MapContainer>
         </div>
     );

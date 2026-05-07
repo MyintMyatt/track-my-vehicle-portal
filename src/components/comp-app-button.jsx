@@ -41,7 +41,7 @@ export const AppAddNewButton = ({
         onClick={onClick}
         disabled={disabled}
         className={
-            `flex gap-2 bg-indigo-600 w-fit p-3 px-5 rounded-md hover:bg-indigo-700 text-white`
+            `flex gap-2 bg-indigo-600 w-fit p-3 px-5 rounded-md hover:bg-indigo-700 text-white cursor-pointer`
         }
         >
             <span>{text}</span>
@@ -56,7 +56,7 @@ export const AppBackButton = ({
     const navigate = useNavigate();
     return(
         <div
-        className="flex items-center gap-2 text-indigo-500 hover:text-indigo-700 mb-5"
+        className="flex items-center gap-2 text-indigo-500 hover:text-indigo-700 mb-5 cursor-pointer"
         onClick={() => navigate(-1)}>
             <ChevronLeft size={28}/>
             <span>Back</span>

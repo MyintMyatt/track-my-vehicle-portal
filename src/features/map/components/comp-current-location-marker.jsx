@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Marker, Popup, useMapEvents } from "react-leaflet"
 import { currentUserIcon } from "../icons/map-icons";
 
 const CurrentLocationMarker = () => {
     const [position, setPosition] = useState(null);
     const map = useMapEvents({
-        click(){
+        click() {
             map.locate();
         },
         locationfound(e) {
@@ -14,6 +14,10 @@ const CurrentLocationMarker = () => {
         }
 
     });
+
+    useEffect(() => {
+        map.locate();
+    }, [map]);
 
     return position === null ? null : (
         <Marker position={position} icon={currentUserIcon}>
