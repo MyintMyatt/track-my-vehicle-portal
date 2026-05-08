@@ -14,7 +14,7 @@ export const AppSubmitButton = ({
             onClick={onClick}
             disabled={loading}
             className={`
-            bg-indigo-600 min-w-full p-3 rounded-md text-white hover:bg-indigo-700 
+            bg-indigo-600 p-3 rounded-md text-white hover:bg-indigo-700 
             ${loading ? 'cursor-not-allowed' : 'cursor-pointer'} ${className}
             `}
         >

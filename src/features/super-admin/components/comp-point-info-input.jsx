@@ -8,7 +8,7 @@ export const PointInfoInput = ({
     rules = {},
     watch,
     setValue,
-    errors,
+    error,
     child
 }) => {
     return (
@@ -22,7 +22,7 @@ export const PointInfoInput = ({
                     rules={rules}
                     watch={watch}
                     setValue={setValue}
-                    error={errors}
+                    error={error}
                     child={child}
                 />
             }

@@ -5,3 +5,14 @@
 * {
   font-family: "Poppins", sans-serif;
 }
+
+/* Hide the entire routing instruction panel */
+/* .leaflet-routing-container, 
+.leaflet-routing-error {
+    display: none !important;
+} */
+
+/* If you want to hide the zoom/attribution to make it look cleaner like a real app */
+/* .leaflet-control-container .leaflet-routing-container {
+    display: none;
+} */

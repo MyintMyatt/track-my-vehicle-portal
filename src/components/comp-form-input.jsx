@@ -62,7 +62,7 @@ export const AppFormInput = (
                 outline-none   transition
                 ${error ? 'border-red-500 transition-all' : 'border-slate-300 focus:border-slate-400 focus:ring-1 focus:ring-slate-300/50'}
                 ${className}
-                ${inputValue ? 'pl-8' : ''}
+                ${inputValue ? 'pr-8' : ''}
                 ${disabled ? 'bg-slate-100' : 'bg-white'}
                 `}
                 >

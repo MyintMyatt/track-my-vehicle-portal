@@ -1,13 +1,17 @@
 import { set, useForm } from "react-hook-form";
-import { AppBackButton } from "../../../components/comp-app-button";
+import { AppBackButton, AppSubmitButton } from "../../../components/comp-app-button";
 import { AppLargeTitle } from "../../../components/comp-app-titles";
 import { AppFormInput, AppFormInputCol, AppFormInputRow } from "../../../components/comp-form-input";
 import { Map } from "lucide-react";
 import { useState } from "react";
 import LocationPickerModal from "../components/comp-location-picker";
 import { PointInfoInput } from "../components/comp-point-info-input";
+import { useDispatch } from "react-redux";
+import { showErrorModal } from "../../../global/reducer/global-modal-ui-slice";
 
 const WayForm = ({ isEdit = false, data }) => {
+
+    const dispatch = useDispatch();
 
     const [openMap, setOpenMap] = useState(false);
     const [selectedPointPrefix, setSelectedPointPrefix] = useState(null);
@@ -23,11 +27,18 @@ const WayForm = ({ isEdit = false, data }) => {
 
     const onSubmit = (data) => {
         console.log(data);
-        console.log('hello');
-
+        console.log('click');
+        
+        dispatch(
+            showErrorModal({
+            title: "Server Error",
+            message: "The server encountered an error. Please try again later."
+        }))
     }
 
     const handleLocationConfirm = async (selectedPoint) => {
+    
+
         if (!selectedPoint) return;
 
         setLoading(true);
@@ -71,7 +82,7 @@ const WayForm = ({ isEdit = false, data }) => {
                             }}
                             watch={watch}
                             setValue={setValue}
-                            error={errors.titile}
+                            error={errors.title}
                         />
                     }
                 />
@@ -222,7 +233,12 @@ const WayForm = ({ isEdit = false, data }) => {
                     }
                 />
 
-                <button type="submit">Submit</button>
+                <div className="mt-12 flex justify-end">
+                    <AppSubmitButton
+                        name={'Submit'}
+                        className={'w-44'}
+                    />
+                </div>
             </form>
             <LocationPickerModal
                 open={openMap}

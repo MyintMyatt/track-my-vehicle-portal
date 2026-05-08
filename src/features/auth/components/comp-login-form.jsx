@@ -27,7 +27,7 @@ const LoginForm = () => {
 
             <AppSubmitButton 
                 name="Login"
-                className='mt-3'
+                className='mt-3 min-w-full'
                 onClick={handleLogin}
             />
            </form>

@@ -5,11 +5,16 @@ import { Provider } from 'react-redux'
 import { store } from '@/store/store.js'
 import { RouterProvider } from 'react-router-dom'
 import router from '@/route/router'
+import { ModelProvider } from './global/modelContext'
+import GlobalModel from './global/component/comp-global-model'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router}/>
+      <ModelProvider>
+        <RouterProvider router={router} />
+      </ModelProvider>
+      <GlobalModel />
     </Provider>
   </StrictMode>,
 )
