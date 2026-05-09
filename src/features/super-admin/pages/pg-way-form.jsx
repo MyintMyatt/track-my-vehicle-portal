@@ -1,13 +1,15 @@
 import { set, useForm } from "react-hook-form";
 import { AppBackButton, AppSubmitButton } from "../../../components/comp-app-button";
 import { AppLargeTitle } from "../../../components/comp-app-titles";
-import { AppFormInput, AppFormInputCol, AppFormInputRow } from "../../../components/comp-form-input";
+import { AppFormDropDown, AppFormInput, AppFormInputCol, AppFormInputRow } from "../../../components/comp-form-input";
 import { Map } from "lucide-react";
 import { useState } from "react";
 import LocationPickerModal from "../components/comp-location-picker";
 import { PointInfoInput } from "../components/comp-point-info-input";
 import { useDispatch } from "react-redux";
 import { showErrorModal } from "../../../global/reducer/global-modal-ui-slice";
+import { DistanceUnit } from "../../../constants/distance-unit";
+import AppStepper from "../../../components/comp-app-form-stepper";
 
 const WayForm = ({ isEdit = false, data }) => {
 
@@ -16,6 +18,17 @@ const WayForm = ({ isEdit = false, data }) => {
     const [openMap, setOpenMap] = useState(false);
     const [selectedPointPrefix, setSelectedPointPrefix] = useState(null);
     const [loading, setLoading] = useState(false);
+    const distanceUnitOptions = Object.values(DistanceUnit).map((unit) => (
+        { value: unit, label: unit }
+    ));
+
+    const steps = [
+        "Way Info",
+        "All Point Info",
+        "Cars Info",
+        "Summary"
+    ];
+    const [currentStep, setCurrentStep] = useState(0);
 
     const {
         register,
@@ -28,16 +41,16 @@ const WayForm = ({ isEdit = false, data }) => {
     const onSubmit = (data) => {
         console.log(data);
         console.log('click');
-        
+
         dispatch(
             showErrorModal({
-            title: "Server Error",
-            message: "The server encountered an error. Please try again later."
-        }))
+                title: "Server Error",
+                message: "The server encountered an error. Please try again later."
+            }))
     }
 
     const handleLocationConfirm = async (selectedPoint) => {
-    
+
 
         if (!selectedPoint) return;
 
@@ -61,11 +74,21 @@ const WayForm = ({ isEdit = false, data }) => {
     }
 
     return (
-        <div>
+        <div className="overflow-scroll">
             <AppBackButton />
             <AppLargeTitle text={!isEdit ? 'Create New Car Way' : 'Edit Car Way'} className={'mb-10'} />
 
-            <form className="ml-10" onSubmit={handleSubmit(onSubmit)}>
+
+            <form className="ml-10 flex flex-col" onSubmit={handleSubmit(onSubmit)}>
+
+                <AppStepper
+                    steps={steps}
+                    currentStep={currentStep}
+                    onStepClick={(index) => {
+                        setCurrentStep(index);
+                    }}
+                />
+
                 <AppFormInputRow
                     label={'Title'}
                     isMandatoryField={true}
@@ -172,7 +195,7 @@ const WayForm = ({ isEdit = false, data }) => {
 
                 {/* End Point Info */}
                 <AppFormInputRow
-                    label={'Ent Point'}
+                    label={'End Point'}
                     isMandatoryField={true}
                     child={
                         <div className="flex-2 grid grid-cols-3 justify-start gap-4 ">
@@ -233,9 +256,91 @@ const WayForm = ({ isEdit = false, data }) => {
                     }
                 />
 
+                {/* Total Distance */}
+                <AppFormInputRow
+                    label={'Total Distance'}
+                    isMandatoryField={true}
+                    child={
+                        <div className="flex-2 grid grid-cols-2 gap-4">
+                            <PointInfoInput
+                                title={'distance length'}
+                                name={'total_distance_value'}
+                                placeholder={'Enter start point name'}
+
+                                register={register}
+                                rules={{
+                                    required: 'total distance value is required'
+                                }}
+                                watch={watch}
+                                setValue={setValue}
+                                error={errors.total_distance_value}
+                            />
+                            <AppFormInputCol
+                                title={'unit'}
+                                child={
+                                    <AppFormDropDown
+                                        name={'distance_unit'}
+                                        placeholder={'Select distance unit'}
+
+                                        register={register}
+                                        rules={{
+                                            required: 'tdistance unit is required'
+                                        }}
+
+                                        error={errors.distance_unit}
+                                        options={distanceUnitOptions}
+                                    />
+                                }
+                            />
+
+                        </div>
+                    }
+                />
+
+
+                <AppFormInputRow
+                    label={'Total Distance'}
+                    isMandatoryField={true}
+                    child={
+                        <div className="flex-2 grid grid-cols-2 gap-4">
+                            <PointInfoInput
+                                title={'distance length'}
+                                name={'total_distance_value'}
+                                placeholder={'Enter start point name'}
+
+                                register={register}
+                                rules={{
+                                    required: 'total distance value is required'
+                                }}
+                                watch={watch}
+                                setValue={setValue}
+                                error={errors.total_distance_value}
+                            />
+                            <AppFormInputCol
+                                title={'unit'}
+                                child={
+                                    <AppFormDropDown
+                                        name={'distance_unit'}
+                                        placeholder={'Select distance unit'}
+
+                                        register={register}
+                                        rules={{
+                                            required: 'tdistance unit is required'
+                                        }}
+
+                                        error={errors.distance_unit}
+                                        options={distanceUnitOptions}
+                                    />
+                                }
+                            />
+
+                        </div>
+                    }
+                />
+
                 <div className="mt-12 flex justify-end">
                     <AppSubmitButton
-                        name={'Submit'}
+                        name={'Next'}
                         className={'w-44'}
                     />
                 </div>
