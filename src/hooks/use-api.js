@@ -15,23 +15,26 @@ export const useApi = () => {
         } = options;
 
         try {
+            
+            
             if (showLoader) setIsLoading(true);
             const response = await apiFunc();
             if (onSuccess) onSuccess(response.data);
             return response.data;
         } catch (error) {
-            const status = error.response?.status;
-            const message = error.response?.data.messages?.[0] || 'An unexpected error occur';
+            // const status = error.response?.status;
+            // const message = error.response?.data.messages?.[0] || 'An unexpected error occur';
 
-            dispatch(showErrorModal({
-                title: errorTitle,
-                message: message
-            }))
+            // dispatch(showErrorModal({
+            //     title: errorTitle,
+            //     message: message
+            // }))
 
             if (onError) onError(error);
             throw error;
         } finally {
             if (showLoader) setIsLoading(false);
+            console.log(isLoading);
         }
     }, [dispatch]);
 

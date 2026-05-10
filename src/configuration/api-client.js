@@ -113,6 +113,8 @@ apiClient.interceptors.response.use(
                 break;
 
         }
+         return Promise.reject(error); 
     }
-)
+);
+
 export default apiClient;

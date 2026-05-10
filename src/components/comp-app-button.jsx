@@ -14,7 +14,36 @@ export const AppSubmitButton = ({
             onClick={onClick}
             disabled={loading}
             className={`
-            bg-indigo-600 p-3 rounded-md text-white hover:bg-indigo-700 
+            bg-indigo-600 p-3 rounded-md text-white hover:bg-indigo-700
+            ${loading ? 'cursor-not-allowed' : 'cursor-pointer'} ${className}
+            `}
+        >
+           {loading ? (
+            <div className="flex justify-center items-center gap-2">
+                <div className="border-white border-2 border-t-transparent animate-spin w-4 h-4 rounded-full">
+                </div>
+            Processing....
+            </div>
+           ) : (name)
+           }
+        </button>
+    );
+};
+
+export const AppPreviousButton = ({
+    name,
+    type,
+    onClick,
+    loading = false,
+    className
+}) => {
+    return (
+        <button
+            type={type}
+            onClick={onClick}
+            disabled={loading}
+            className={`
+            bg-indigo-600 p-3 rounded-md text-black hover:bg-slate-300
             ${loading ? 'cursor-not-allowed' : 'cursor-pointer'} ${className}
             `}
         >

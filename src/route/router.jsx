@@ -6,7 +6,7 @@ import CarTrackMapView from "../features/super-admin/pages/pg-car-track-map-view
 import WayList from "../features/super-admin/pages/pg-way-list";
 import ProtectedRoute from "./protected-route";
 import { ROUTE_PATHS } from "../constants/app-fe-route-endpoints";
-import WayForm from "../features/super-admin/pages/pg-way-form";
+import WayForm from "../features/super-admin/way/page/pg-way-form";
 
 const router = createBrowserRouter(
     [

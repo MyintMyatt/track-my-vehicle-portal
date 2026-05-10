@@ -3,6 +3,7 @@ import { AppFormInput, AppFormInputCol } from "../../../components/comp-form-inp
 export const PointInfoInput = ({
     title,
     name,
+    type,
     placeholder,
     register,
     rules = {},
@@ -17,6 +18,7 @@ export const PointInfoInput = ({
             child={
                 <AppFormInput
                     name={name}
+                    type={type}
                     placeholder={placeholder}
                     register={register}
                     rules={rules}

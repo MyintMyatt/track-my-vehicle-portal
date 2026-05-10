@@ -1,105 +1,27 @@
-import { set, useForm } from "react-hook-form";
-import { AppBackButton, AppSubmitButton } from "../../../components/comp-app-button";
-import { AppLargeTitle } from "../../../components/comp-app-titles";
-import { AppFormDropDown, AppFormInput, AppFormInputCol, AppFormInputRow } from "../../../components/comp-form-input";
 import { Map } from "lucide-react";
-import { useState } from "react";
-import LocationPickerModal from "../components/comp-location-picker";
-import { PointInfoInput } from "../components/comp-point-info-input";
-import { useDispatch } from "react-redux";
-import { showErrorModal } from "../../../global/reducer/global-modal-ui-slice";
-import { DistanceUnit } from "../../../constants/distance-unit";
-import AppStepper from "../../../components/comp-app-form-stepper";
+import { AppFormDropDown, AppFormInput, AppFormInputCol, AppFormInputRow } from "../../../../components/comp-form-input";
+import { PointInfoInput } from "../../components/comp-point-info-input";
 
-const WayForm = ({ isEdit = false, data }) => {
-
-    const dispatch = useDispatch();
-
-    const [openMap, setOpenMap] = useState(false);
-    const [selectedPointPrefix, setSelectedPointPrefix] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const distanceUnitOptions = Object.values(DistanceUnit).map((unit) => (
-        { value: unit, label: unit }
-    ));
-
-    const steps = [
-        "Way Info",
-        "All Point Info",
-        "Cars Info",
-        "Summary"
-    ];
-    const [currentStep, setCurrentStep] = useState(0);
-
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        watch,
-        setValue
-    } = useForm();
-
-    const onSubmit = (data) => {
-        console.log(data);
-        console.log('click');
-
-        dispatch(
-            showErrorModal({
-                title: "Server Error",
-                message: "The server encountered an error. Please try again later."
-            }))
-    }
-
-    const handleLocationConfirm = async (selectedPoint) => {
-
-
-        if (!selectedPoint) return;
-
-        setLoading(true);
-
-        const prefix = selectedPointPrefix;
-        setValue(`${prefix}_latitude`, selectedPoint.lat.toString());
-        setValue(`${prefix}_longitude`, selectedPoint.lng.toString());
-
-        // get location name
-        const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${selectedPoint.lat}&lon=${selectedPoint.lng}`
-        );
-
-        const data = await res.json();
-        setValue(`${prefix}_point_name`, data.display_name);
-
-        setLoading(false);
-        setOpenMap(false);
-        setSelectedPointPrefix(null);
-    }
-
-    return (
-        <div className="overflow-scroll">
-            <AppBackButton />
-            <AppLargeTitle text={!isEdit ? 'Create New Car Way' : 'Edit Car Way'} className={'mb-10'} />
-
-
-            <form className="ml-10 flex flex-col" onSubmit={handleSubmit(onSubmit)}>
-
-                <AppStepper
-                    steps={steps}
-                    currentStep={currentStep}
-                    onStepClick={(index) => {
-                        setCurrentStep(index);
-                    }}
-                />
-
-                <AppFormInputRow
+const WayInfoStep = ({
+    register,
+    watch,
+    setValue,
+    errors,
+    distanceUnitOptions,
+    setOpenMap,
+    setSelectedPointPrefix
+}) => {
+    return(
+        <>
+            <AppFormInputRow
                     label={'Title'}
                     isMandatoryField={true}
                     child={
                         <AppFormInput
                             name={'title'}
-                            value={'Hledan to Dala'}
                             placeholder={'Enter title'}
                             className={'flex-2'}
                             register={register}
-                            disabled={true}
                             rules={{
                                 required: 'title is required'
                             }}
@@ -264,6 +186,7 @@ const WayForm = ({ isEdit = false, data }) => {
                         <div className="flex-2 grid grid-cols-2 gap-4">
                             <PointInfoInput
                                 title={'distance length'}
+                                type={'number'}
                                 name={'total_distance_value'}
                                 placeholder={'Enter start point name'}
 
@@ -297,63 +220,8 @@ const WayForm = ({ isEdit = false, data }) => {
                     }
                 />
 
-
-                <AppFormInputRow
-                    label={'Total Distance'}
-                    isMandatoryField={true}
-                    child={
-                        <div className="flex-2 grid grid-cols-2 gap-4">
-                            <PointInfoInput
-                                title={'distance length'}
-                                name={'total_distance_value'}
-                                placeholder={'Enter start point name'}
-
-                                register={register}
-                                rules={{
-                                    required: 'total distance value is required'
-                                }}
-                                watch={watch}
-                                setValue={setValue}
-                                error={errors.total_distance_value}
-                            />
-                            <AppFormInputCol
-                                title={'unit'}
-                                child={
-                                    <AppFormDropDown
-                                        name={'distance_unit'}
-                                        placeholder={'Select distance unit'}
-
-                                        register={register}
-                                        rules={{
-                                            required: 'tdistance unit is required'
-                                        }}
-
-                                        error={errors.distance_unit}
-                                        options={distanceUnitOptions}
-                                    />
-                                }
-                            />
-
-                        </div>
-                    }
-                />
-
-                <div className="mt-12 flex justify-end">
-                    <AppSubmitButton
-                        name={'Next'}
-                        className={'w-44'}
-                    />
-                </div>
-            </form>
-            <LocationPickerModal
-                open={openMap}
-                onClose={() => setOpenMap(false)}
-                onConfirm={handleLocationConfirm}
-                loading={loading}
-            />
-        </div>
+        </>
     );
-
 };
 
-export default WayForm;
+export default WayInfoStep;
