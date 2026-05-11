@@ -10,8 +10,16 @@ export const getLocationNameByLatLng = async ({ lat, lng }) => {
     }
     );
 }
+
+export const getDistanceBetweenPoints = async (payload) => {
+    const { points, distanceUnit } = payload;
+    return apiClient.post(`${api_endpoints.map.distance_between_points}?distance-unit=${distanceUnit}`, {
+        points
+    });
+}
 // const res = await fetch(
 //     `https://nominatim.openstreetmap.org/reverse?format=json&lat=${selectedPoint.lat}&lon=${selectedPoint.lng}`
 // );
 
 // const data = await res.json();
+

@@ -12,16 +12,31 @@ import { DistanceUnit } from "../../../../constants/distance-unit";
 import AppStepper from "../../../../components/comp-app-form-stepper";
 import WayInfoStep from "../step/comp-way-info.step";
 import { useLocationApi } from "../../../../hooks/map/use-location-api";
+import useCalcuateDistance from "../../../../hooks/map/use-calculate-distance";
 
 const WayForm = ({ isEdit = false, data }) => {
+    const {
+        register,
+        handleSubmit,
+        trigger,
+        formState: { errors },
+        watch,
+        setValue
+    } = useForm({
+        defaultValues: {
+        distance_unit: DistanceUnit.KILO_METER.value,
+    }
+    });
 
     const dispatch = useDispatch();
-    const { isLoading: isLoading, getLocationName } = useLocationApi();
+    const { isLoading, getLocationName, getDistanceBetweenPoints } = useLocationApi();
+    const { isCalculating } = useCalcuateDistance(watch, setValue);
+
     const [openMap, setOpenMap] = useState(false);
     const [selectedPointPrefix, setSelectedPointPrefix] = useState(null);
     const [currentStep, setCurrentStep] = useState(0);
     const distanceUnitOptions = Object.values(DistanceUnit).map((unit) => (
-        { value: unit, label: unit }
+        { value: unit.value, label: unit.label }
     ));
 
     const steps = [
@@ -30,15 +45,6 @@ const WayForm = ({ isEdit = false, data }) => {
         "Cars Info",
         "Summary"
     ];
-
-    const {
-        register,
-        handleSubmit,
-        trigger,
-        formState: { errors },
-        watch,
-        setValue
-    } = useForm();
 
     const onSubmit = (data) => {
         console.log(data);
@@ -72,7 +78,7 @@ const WayForm = ({ isEdit = false, data }) => {
                     setSelectedPointPrefix(null);
                 },
                 onError: (error) => {
-                   setOpenMap(false);
+                    setOpenMap(false);
                 }
             }
         );

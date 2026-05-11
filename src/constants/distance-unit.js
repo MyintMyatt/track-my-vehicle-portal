@@ -1,6 +1,6 @@
 
 export const DistanceUnit = Object.freeze({
-    kilometer : 'kilometer',
-    meter : 'meter',
-    mile : 'mile'
+    KILO_METER: { value: 'KILO_METER', label: 'Kilometer' },
+    METER: { value: 'METER', label: 'Meter' },
+    MILE: { value: 'MILE', label: 'Mile' }
 });
