@@ -22,11 +22,11 @@ const MapBaseLayout = ({
 
                 {children}
 
-                <Routing wayPoints={[
+                {/* <Routing wayPoints={[
                     { lat: 16.8661, lng: 96.1951 },
                     { lat: 16.8700, lng: 96.2000 },
                     { lat: 16.8800, lng: 96.2100 }
-                ]} />
+                ]} /> */}
 
                 {/* <CurrentLocationMarker /> */}
             </MapContainer>

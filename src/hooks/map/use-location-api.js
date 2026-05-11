@@ -4,8 +4,11 @@ import { useApi } from "../use-api"
 export const useLocationApi = () => {
     const { request, isLoading } = useApi();
 
-    const getLocationName =  ({ lat, lng }) => (
-        request(() =>  getLocationNameByLatLng({lat, lng})
+    const getLocationName =  (params, options = {}) => (
+        request(() =>  getLocationNameByLatLng(params), {
+            errorTitle : "Fetch Location Name Failed",
+            ...options
+        }
         )
     );
 

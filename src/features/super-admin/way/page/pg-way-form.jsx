@@ -3,7 +3,7 @@ import { AppBackButton, AppPreviousButton, AppSubmitButton } from "../../../../c
 import { AppLargeTitle } from "../../../../components/comp-app-titles";
 import { AppFormDropDown, AppFormInput, AppFormInputCol, AppFormInputRow } from "../../../../components/comp-form-input";
 import { Map } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LocationPickerModal from "../../components/comp-location-picker";
 import { PointInfoInput } from "../../components/comp-point-info-input";
 import { useDispatch } from "react-redux";
@@ -16,11 +16,10 @@ import { useLocationApi } from "../../../../hooks/map/use-location-api";
 const WayForm = ({ isEdit = false, data }) => {
 
     const dispatch = useDispatch();
-    const { isLoading, getLocationName } = useLocationApi();
-
-    const [loading, setLoading] = useState(false);
+    const { isLoading: isLoading, getLocationName } = useLocationApi();
     const [openMap, setOpenMap] = useState(false);
     const [selectedPointPrefix, setSelectedPointPrefix] = useState(null);
+    const [currentStep, setCurrentStep] = useState(0);
     const distanceUnitOptions = Object.values(DistanceUnit).map((unit) => (
         { value: unit, label: unit }
     ));
@@ -31,9 +30,6 @@ const WayForm = ({ isEdit = false, data }) => {
         "Cars Info",
         "Summary"
     ];
-    const [currentStep, setCurrentStep] = useState(0);
-
-
 
     const {
         register,
@@ -55,29 +51,32 @@ const WayForm = ({ isEdit = false, data }) => {
             }))
     }
 
+
     const handleLocationConfirm = async (selectedPoint) => {
 
-
         if (!selectedPoint) return;
-        setLoading(true);
         const prefix = selectedPointPrefix;
         setValue(`${prefix}_latitude`, selectedPoint.lat.toString());
         setValue(`${prefix}_longitude`, selectedPoint.lng.toString());
 
         // get location name
-        try {
-            const response = await getLocationName({
+        getLocationName(
+            {
                 lat: selectedPoint.lat,
                 lng: selectedPoint.lng
-            });
-            console.log(response?.payload);
+            },
+            {
+                onSuccess: (data) => {
+                    setValue(`${prefix}_point_name`, data?.payload.display_name);
+                    setOpenMap(false);
+                    setSelectedPointPrefix(null);
+                },
+                onError: (error) => {
+                   setOpenMap(false);
+                }
+            }
+        );
 
-            setValue(`${prefix}_point_name`, response?.payload.display_name);
-        } finally {
-            setLoading(false);
-            setOpenMap(false);
-            setSelectedPointPrefix(null);
-        }
     }
 
     const handleNext = async () => {
@@ -172,7 +171,7 @@ const WayForm = ({ isEdit = false, data }) => {
                 open={openMap}
                 onClose={() => setOpenMap(false)}
                 onConfirm={handleLocationConfirm}
-                loading={loading}
+                loading={isLoading}
             />
         </div>
     );
