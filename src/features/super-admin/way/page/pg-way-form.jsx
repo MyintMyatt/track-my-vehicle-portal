@@ -1,4 +1,4 @@
-import { set, useForm } from "react-hook-form";
+import { set, useFieldArray, useForm } from "react-hook-form";
 import { AppBackButton, AppPreviousButton, AppSubmitButton } from "../../../../components/comp-app-button";
 import { AppLargeTitle } from "../../../../components/comp-app-titles";
 import { AppFormDropDown, AppFormInput, AppFormInputCol, AppFormInputRow } from "../../../../components/comp-form-input";
@@ -13,10 +13,12 @@ import AppStepper from "../../../../components/comp-app-form-stepper";
 import WayInfoStep from "../step/comp-way-info.step";
 import { useLocationApi } from "../../../../hooks/map/use-location-api";
 import useCalcuateDistance from "../../../../hooks/map/use-calculate-distance";
+import WayPointInfoStep from "../step/comp-way-points-info-step";
 
 const WayForm = ({ isEdit = false, data }) => {
     const {
         register,
+        control,
         handleSubmit,
         trigger,
         formState: { errors },
@@ -24,9 +26,15 @@ const WayForm = ({ isEdit = false, data }) => {
         setValue
     } = useForm({
         defaultValues: {
-        distance_unit: DistanceUnit.KILO_METER.value,
-    }
+            distance_unit: DistanceUnit.KILO_METER.value,
+            waypoints: [{ name: '', lat: '', lng: '' }]
+        }
     });
+
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "waypoints"
+    })
 
     const dispatch = useDispatch();
     const { isLoading, getLocationName, getDistanceBetweenPoints } = useLocationApi();
@@ -62,8 +70,8 @@ const WayForm = ({ isEdit = false, data }) => {
 
         if (!selectedPoint) return;
         const prefix = selectedPointPrefix;
-        setValue(`${prefix}_latitude`, selectedPoint.lat.toString());
-        setValue(`${prefix}_longitude`, selectedPoint.lng.toString());
+        setValue(`${prefix}.latitude`, selectedPoint.lat.toString());
+        setValue(`${prefix}.longitude`, selectedPoint.lng.toString());
 
         // get location name
         getLocationName(
@@ -73,7 +81,7 @@ const WayForm = ({ isEdit = false, data }) => {
             },
             {
                 onSuccess: (data) => {
-                    setValue(`${prefix}_point_name`, data?.payload.display_name);
+                    setValue(`${prefix}.point_name`, data?.payload.display_name);
                     setOpenMap(false);
                     setSelectedPointPrefix(null);
                 },
@@ -86,31 +94,36 @@ const WayForm = ({ isEdit = false, data }) => {
     }
 
     const handleNext = async () => {
-        let fields = [];
+        let fieldsToValidate = [];
 
-        if (currentStep === 0) {
-            fields = [
-                'title',
-                'description',
-                'start_point_name',
-                'start_latitude',
-                'start_longitude',
-                'end_point_name',
-                'end_latitude',
-                'end_longitude',
-                'total_distance_value',
-                'distance_unit'
-            ];
-        }
+        switch (currentStep) {
+            case 0:
+                fieldsToValidate = [
+                    'title',
+                    'description',
+                    'start_point_name',
+                    'start_latitude',
+                    'start_longitude',
+                    'end_point_name',
+                    'end_latitude',
+                    'end_longitude',
+                    'total_distance_value',
+                    'distance_unit'
+                ];
+                break;
+            case 1:
+                fieldsToValidate = ['waypoints'];
+            
+        };
 
-        const isValid = await trigger(fields);
+        const isValid = await trigger(fieldsToValidate);
         if (isValid) {
-            setCurrentStep(currentStep + 1);
+            setCurrentStep((prev) => prev + 1);
         }
     }
 
     const handlePrevious = () => {
-        setCurrentStep(currentStep - 1);
+        setCurrentStep((prev) => prev - 1);
     }
 
     return (
@@ -142,14 +155,23 @@ const WayForm = ({ isEdit = false, data }) => {
                 )}
 
                 {currentStep === 1 && (
-                    <div>
-                        All Point Info
-                    </div>
+                    <WayPointInfoStep
+                        register={register}
+                        watch={watch}
+                        seValue={setValue}
+                        errors={errors}
+                        fields={fields}
+                        append={append}
+                        remove={remove}
+                        setOpenMap={setOpenMap}
+                        setSelectedPointPrefix={setSelectedPointPrefix}
+                    />
                 )}
 
                 <div className="mt-12 flex gap-3 justify-end">
                     {currentStep > 0 && (
                         <AppPreviousButton
+                            type={'button'}
                             name={'Previous'}
                             className={'w-44 bg-slate-200 text-black'}
                             onClick={handlePrevious}

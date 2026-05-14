@@ -60,7 +60,7 @@ const WayInfoStep = ({
                         <div className="flex-2 grid grid-cols-3 justify-start gap-4 ">
                             <PointInfoInput
                                 title={'name'}
-                                name={'start_point_name'}
+                                name={'start.point_name'}
                                 placeholder={'Enter start point name'}
 
                                 register={register}
@@ -69,11 +69,11 @@ const WayInfoStep = ({
                                 }}
                                 watch={watch}
                                 setValue={setValue}
-                                error={errors.start_point_name}
+                                error={errors.start?.point_name}
                             />
                             <PointInfoInput
                                 title={'latitude'}
-                                name={'start_latitude'}
+                                name={'start.latitude'}
                                 placeholder={'Enter start point latitude'}
                                 register={register}
                                 rules={{
@@ -81,7 +81,7 @@ const WayInfoStep = ({
                                 }}
                                 watch={watch}
                                 setValue={setValue}
-                                error={errors.start_latitude}
+                                error={errors.start?.latitude}
                                 child={
                                     <button type='button' onClick={() => {
                                         setOpenMap(true);
@@ -93,7 +93,7 @@ const WayInfoStep = ({
                             />
                             <PointInfoInput
                                 title={'longitude'}
-                                name={'start_longitude'}
+                                name={'start.longitude'}
                                 placeholder={'Enter start point longitude'}
                                 register={register}
                                 rules={{
@@ -101,7 +101,7 @@ const WayInfoStep = ({
                                 }}
                                 watch={watch}
                                 setValue={setValue}
-                                error={errors.start_longitude}
+                                error={errors.start?.longitude}
                                 child={
                                     <button type='button' onClick={() => {
                                         setOpenMap(true);
@@ -123,7 +123,7 @@ const WayInfoStep = ({
                         <div className="flex-2 grid grid-cols-3 justify-start gap-4 ">
                             <PointInfoInput
                                 title={'name'}
-                                name={'end_point_name'}
+                                name={'end.point_name'}
                                 placeholder={'Enter end point name'}
 
                                 register={register}
@@ -132,11 +132,11 @@ const WayInfoStep = ({
                                 }}
                                 watch={watch}
                                 setValue={setValue}
-                                error={errors.end_point_name}
+                                error={errors.end?.point_name}
                             />
                             <PointInfoInput
                                 title={'latitude'}
-                                name={'end_latitude'}
+                                name={'end.latitude'}
                                 placeholder={'Enter end point latitude'}
                                 register={register}
                                 rules={{
@@ -144,7 +144,7 @@ const WayInfoStep = ({
                                 }}
                                 watch={watch}
                                 setValue={setValue}
-                                error={errors.end_latitude}
+                                error={errors.end?.latitude}
                                 child={
                                     <button type='button' onClick={() => {
                                         setOpenMap(true);
@@ -156,7 +156,7 @@ const WayInfoStep = ({
                             />
                             <PointInfoInput
                                 title={'longitude'}
-                                name={'end_longitude'}
+                                name={'end.longitude'}
                                 placeholder={'Enter end point longitude'}
                                 register={register}
                                 rules={{
@@ -164,7 +164,7 @@ const WayInfoStep = ({
                                 }}
                                 watch={watch}
                                 setValue={setValue}
-                                error={errors.end_longitude}
+                                error={errors.end?.longitude}
                                 child={
                                     <button type='button' onClick={() => {
                                         setOpenMap(true);

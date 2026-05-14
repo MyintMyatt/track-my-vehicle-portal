@@ -4,10 +4,10 @@ import { useLocationApi } from "./use-location-api"
 const useCalcuateDistance = (watch, setValue) => {
     const { isLoading, getTotalDistance } = useLocationApi();
 
-    const startLat = watch("start_latitude");
-    const startLng = watch("start_longitude");
-    const endLat = watch("end_latitude");
-    const endLng = watch("end_longitude");
+    const startLat = watch("start.latitude");
+    const startLng = watch("start.longitude");
+    const endLat = watch("end.latitude");
+    const endLng = watch("end.longitude");
     const distanceUnit = watch("distance_unit");
 
     useEffect(() => {
