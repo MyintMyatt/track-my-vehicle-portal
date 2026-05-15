@@ -80,7 +80,7 @@ const WayPointInfoStep = ({
                 />
             ))}
 
-            <div className="flex justify-between items-center">
+            <div className="flex justify-end mt-10 items-center">
                 {/* <h3 className="text-lg font-medium">Waypoints (Intermediate Stops)</h3> */}
                 <button
                     type="button"

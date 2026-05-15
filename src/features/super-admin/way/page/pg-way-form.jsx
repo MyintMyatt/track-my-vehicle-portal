@@ -14,6 +14,7 @@ import WayInfoStep from "../step/comp-way-info.step";
 import { useLocationApi } from "../../../../hooks/map/use-location-api";
 import useCalcuateDistance from "../../../../hooks/map/use-calculate-distance";
 import WayPointInfoStep from "../step/comp-way-points-info-step";
+import CarInfoStep from "../step/comp-car-info-setp";
 
 const WayForm = ({ isEdit = false, data }) => {
     const {
@@ -27,14 +28,33 @@ const WayForm = ({ isEdit = false, data }) => {
     } = useForm({
         defaultValues: {
             distance_unit: DistanceUnit.KILO_METER.value,
-            waypoints: [{ name: '', lat: '', lng: '' }]
+            waypoints: [{ name: '', lat: '', lng: '' }],
+            car_infos: [{
+                car_specification: {
+                    car_id_card_number: '',
+                    car_model: '',
+                    capacity: null,
+                    amount_per_unit: null,
+                    distance_unit: DistanceUnit.KILO_METER.value,
+                    car_id_card_number_photo: null,
+                    car_photo: null
+                }
+            }]
         }
     });
 
     const { fields, append, remove } = useFieldArray({
         control,
         name: "waypoints"
-    })
+    });
+
+    const { 
+        fields: carInfoFields,
+        append: carInfoFieldsAppend,
+        remove: carInfoFieldsRemove } = useFieldArray({
+            control,
+            name: 'car_infos'
+        });
 
     const dispatch = useDispatch();
     const { isLoading, getLocationName, getDistanceBetweenPoints } = useLocationApi();
@@ -95,6 +115,7 @@ const WayForm = ({ isEdit = false, data }) => {
 
     const handleNext = async () => {
         let fieldsToValidate = [];
+        console.log(currentStep);
 
         switch (currentStep) {
             case 0:
@@ -113,7 +134,13 @@ const WayForm = ({ isEdit = false, data }) => {
                 break;
             case 1:
                 fieldsToValidate = ['waypoints'];
+                break;
+            case 2:
+                fieldsToValidate = ['car_infos'];
+                break;
             
+            
+
         };
 
         const isValid = await trigger(fieldsToValidate);
@@ -165,6 +192,19 @@ const WayForm = ({ isEdit = false, data }) => {
                         remove={remove}
                         setOpenMap={setOpenMap}
                         setSelectedPointPrefix={setSelectedPointPrefix}
+                    />
+                )}
+
+
+                {currentStep === 2 && (
+                    <CarInfoStep
+                        register={register}
+                        watch={watch}
+                        setValue={setValue}
+                        errors={errors}
+                        fields={carInfoFields}
+                        append={carInfoFieldsAppend}
+                        remove={carInfoFieldsRemove}
                     />
                 )}
 
