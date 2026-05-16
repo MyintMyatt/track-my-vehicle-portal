@@ -135,8 +135,8 @@ export const AppFormDropDown = ({
             {...register(name, rules)}
             {...props}
             className={`
-                w-full border  rounded-md px-3 py-2  text-slate-900 
-                outline-none   transition
+                w-full border rounded-md px-3 py-2  text-slate-900 
+                outline-none transition
                 ${error ? 'border-red-500 transition-all' : 'border-slate-300 focus:border-slate-400 focus:ring-1 focus:ring-slate-300/50'}
                 ${className}
                 ${disabled ? 'bg-slate-100' : 'bg-white'}

@@ -15,6 +15,7 @@ import { useLocationApi } from "../../../../hooks/map/use-location-api";
 import useCalcuateDistance from "../../../../hooks/map/use-calculate-distance";
 import WayPointInfoStep from "../step/comp-way-points-info-step";
 import CarInfoStep from "../step/comp-car-info-setp";
+import { Gender } from "../../../../constants/app-common-const";
 
 const WayForm = ({ isEdit = false, data }) => {
     const {
@@ -31,13 +32,24 @@ const WayForm = ({ isEdit = false, data }) => {
             waypoints: [{ name: '', lat: '', lng: '' }],
             car_infos: [{
                 car_specification: {
-                    car_id_card_number: '',
+                    license_number: '',
                     car_model: '',
                     capacity: null,
                     amount_per_unit: null,
                     distance_unit: DistanceUnit.KILO_METER.value,
-                    car_id_card_number_photo: null,
+                    license_photo: null,
                     car_photo: null
+                },
+                driver_info: {
+                    name: '',
+                    dob: '',
+                    gender: null,
+                    phone: '',
+                    nrc: '',
+                    nrcCardPhoto: '',
+                    driverLicenseNumber: '',
+                    driverLicensePhoto: null,
+                    driverProfilePhoto: null
                 }
             }]
         }
@@ -65,6 +77,9 @@ const WayForm = ({ isEdit = false, data }) => {
     const [currentStep, setCurrentStep] = useState(0);
     const distanceUnitOptions = Object.values(DistanceUnit).map((unit) => (
         { value: unit.value, label: unit.label }
+    ));
+    const genderOptions = Object.values(Gender).map((gender) => (
+        {value: gender, label : gender}
     ));
 
     const steps = [
@@ -159,7 +174,7 @@ const WayForm = ({ isEdit = false, data }) => {
             <AppLargeTitle text={!isEdit ? 'Create New Car Way' : 'Edit Car Way'} className={'mb-10'} />
 
 
-            <form className="ml-10 flex flex-col">
+            <form className="ml-10 flex flex-col" onSubmit={(e) => e.preventDefault()}>
 
                 <AppStepper
                     steps={steps}
@@ -185,7 +200,7 @@ const WayForm = ({ isEdit = false, data }) => {
                     <WayPointInfoStep
                         register={register}
                         watch={watch}
-                        seValue={setValue}
+                        setValue={setValue}
                         errors={errors}
                         fields={fields}
                         append={append}
@@ -205,7 +220,13 @@ const WayForm = ({ isEdit = false, data }) => {
                         fields={carInfoFields}
                         append={carInfoFieldsAppend}
                         remove={carInfoFieldsRemove}
+                        distanceUnitOptions={distanceUnitOptions}
+                        genderOptions={genderOptions}
                     />
+                )}
+
+                {currentStep === 3 && (
+                    <div>summary</div>
                 )}
 
                 <div className="mt-12 flex gap-3 justify-end">
