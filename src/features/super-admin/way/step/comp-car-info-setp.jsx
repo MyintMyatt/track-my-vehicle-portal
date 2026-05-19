@@ -23,18 +23,16 @@ const CarInfoStep = ({
             if (prev.includes(index)) {
                 return prev.filter((i) => i !== index);
             }
-
             return [...prev, index];
         });
     };
 
     const handleDelete = (index, itemId) => {
-    remove(index);
-
-    setCollapsedIndexes((prev) =>
-        prev.filter((id) => id !== itemId)
-    );
-};
+        remove(index);
+        setCollapsedIndexes((prev) =>
+            prev.filter((id) => id !== itemId)
+        );
+    };
 
     return (
         <div className="space-y-6">
@@ -73,7 +71,7 @@ const CarInfoStep = ({
                                         )
                                     }
 
-                                    <button onClick={() => handleCollapsed(item.id)} className="transition-transform duration-300">
+                                    <button type="button" onClick={() => handleCollapsed(item.id)} className="transition-transform duration-300">
                                         <ChevronDown
                                             className={`transition-transform duration-300 ${collapsedIndexes.includes(item.id)
                                                 ? '-rotate-90'
@@ -104,7 +102,8 @@ const CarInfoStep = ({
                                             }}
                                             watch={watch}
                                             setValue={setValue}
-                                            error={errors.car_infos?.[index]?.car_specification.license_number}
+                                            /* FIXED: Added ?. after car_specification */
+                                            error={errors.car_infos?.[index]?.car_specification?.license_number}
                                         />
                                     }
                                 />
@@ -124,7 +123,29 @@ const CarInfoStep = ({
                                             }}
                                             watch={watch}
                                             setValue={setValue}
-                                            error={errors.car_infos?.[index]?.car_specification.license_photo}
+                                            /* FIXED: Added ?. after car_specification */
+                                            error={errors.car_infos?.[index]?.car_specification?.license_photo}
+                                        />
+                                    }
+                                />
+
+                                <AppFormInputRow
+                                    label={`Car  Photo`}
+                                    isMandatoryField={true}
+                                    child={
+                                        <AppImagePicker
+                                            type='file'
+                                            name={`car_infos.${index}.car_specification.car_photo`}
+                                            placeholder={'Enter car  photo'}
+                                            className={'min-h-[500px]'}
+                                            register={register}
+                                            rules={{
+                                                required: 'car  photo is required'
+                                            }}
+                                            watch={watch}
+                                            setValue={setValue}
+                                            /* FIXED: Added ?. after car_specification */
+                                            error={errors.car_infos?.[index]?.car_specification?.car_photo}
                                         />
                                     }
                                 />
@@ -144,7 +165,8 @@ const CarInfoStep = ({
                                             }}
                                             watch={watch}
                                             setValue={setValue}
-                                            error={errors.car_infos?.[index]?.car_specification.car_model}
+                                            /* FIXED: Added ?. after car_specification */
+                                            error={errors.car_infos?.[index]?.car_specification?.car_model}
                                         />
                                     }
                                 />
@@ -165,7 +187,8 @@ const CarInfoStep = ({
                                             }}
                                             watch={watch}
                                             setValue={setValue}
-                                            error={errors.car_infos?.[index]?.car_specification.capacity}
+                                            /* FIXED: Added ?. after car_specification */
+                                            error={errors.car_infos?.[index]?.car_specification?.capacity}
                                         />
                                     }
                                 />
@@ -186,7 +209,8 @@ const CarInfoStep = ({
                                             }}
                                             watch={watch}
                                             setValue={setValue}
-                                            error={errors.car_infos?.[index]?.car_specification.amount_per_unit}
+                                            /* FIXED: Added ?. after car_specification */
+                                            error={errors.car_infos?.[index]?.car_specification?.amount_per_unit}
                                         />
                                     }
                                 />
@@ -203,7 +227,8 @@ const CarInfoStep = ({
                                             rules={{
                                                 required: 'distance unit is required'
                                             }}
-                                            error={errors.car_infos?.[index]?.car_specification.distance_unit}
+                                            /* FIXED: Added ?. after car_specification */
+                                            error={errors.car_infos?.[index]?.car_specification?.distance_unit}
                                             options={distanceUnitOptions}
                                         />
                                     }
@@ -213,7 +238,7 @@ const CarInfoStep = ({
                             {/* Driver Info */}
                             <div className="border border-slate-200 rounded-md p-5 mx-5 my-3">
                                 <div className="flex justify-between">
-                                    <h2 className="font-medium text-xl">Driver Infomation</h2>
+                                    <h2 className="font-medium text-xl">Driver Information</h2>
                                 </div>
                                 <AppFormInputRow
                                     label={`Driver Name`}
@@ -229,7 +254,8 @@ const CarInfoStep = ({
                                             }}
                                             watch={watch}
                                             setValue={setValue}
-                                            error={errors.car_infos?.[index]?.driver_info.name}
+                                            /* FIXED: Added ?. after driver_info */
+                                            error={errors.car_infos?.[index]?.driver_info?.name}
                                         />
                                     }
                                 />
@@ -249,7 +275,8 @@ const CarInfoStep = ({
                                             }}
                                             watch={watch}
                                             setValue={setValue}
-                                            error={errors.car_infos?.[index]?.driver_info.dob}
+                                            /* FIXED: Added ?. after driver_info */
+                                            error={errors.car_infos?.[index]?.driver_info?.dob}
                                         />
                                     }
                                 />
@@ -269,7 +296,8 @@ const CarInfoStep = ({
                                             }}
                                             watch={watch}
                                             setValue={setValue}
-                                            error={errors.car_infos?.[index]?.driver_info.phone}
+                                            /* FIXED: Added ?. after driver_info */
+                                            error={errors.car_infos?.[index]?.driver_info?.phone}
                                         />
                                     }
                                 />
@@ -287,7 +315,8 @@ const CarInfoStep = ({
                                             rules={{
                                                 required: 'gender is required'
                                             }}
-                                            error={errors.car_infos?.[index]?.driver_info.gender}
+                                            /* FIXED: Added ?. after driver_info */
+                                            error={errors.car_infos?.[index]?.driver_info?.gender}
                                             options={genderOptions}
                                         />
                                     }
@@ -309,7 +338,8 @@ const CarInfoStep = ({
                                             }}
                                             watch={watch}
                                             setValue={setValue}
-                                            error={errors.car_infos?.[index]?.driver_info.nrc}
+                                            /* FIXED: Added ?. after driver_info */
+                                            error={errors.car_infos?.[index]?.driver_info?.nrc}
                                         />
                                     }
                                 />
@@ -330,7 +360,8 @@ const CarInfoStep = ({
                                             }}
                                             watch={watch}
                                             setValue={setValue}
-                                            error={errors.car_infos?.[index]?.driver_info.nrcCardPhoto}
+                                            /* FIXED: Added ?. after driver_info */
+                                            error={errors.car_infos?.[index]?.driver_info?.nrcCardPhoto}
                                         />
                                     }
                                 />
@@ -351,7 +382,8 @@ const CarInfoStep = ({
                                             }}
                                             watch={watch}
                                             setValue={setValue}
-                                            error={errors.car_infos?.[index]?.driver_info.driverLicenseNumber}
+                                            /* FIXED: Added ?. after driver_info */
+                                            error={errors.car_infos?.[index]?.driver_info?.driverLicenseNumber}
                                         />
                                     }
                                 />
@@ -372,7 +404,8 @@ const CarInfoStep = ({
                                             }}
                                             watch={watch}
                                             setValue={setValue}
-                                            error={errors.car_infos?.[index]?.driver_info.driverLicensePhoto}
+                                            /* FIXED: Added ?. after driver_info */
+                                            error={errors.car_infos?.[index]?.driver_info?.driverLicensePhoto}
                                         />
                                     }
                                 />
@@ -393,7 +426,8 @@ const CarInfoStep = ({
                                             }}
                                             watch={watch}
                                             setValue={setValue}
-                                            error={errors.car_infos?.[index]?.driver_info.driverProfilePhoto}
+                                            /* FIXED: Added ?. after driver_info */
+                                            error={errors.car_infos?.[index]?.driver_info?.driverProfilePhoto}
                                         />
                                     }
                                 />
@@ -435,7 +469,6 @@ const CarInfoStep = ({
                 </button>
             </div>
         </div>
-
     );
 };
 

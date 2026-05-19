@@ -16,6 +16,7 @@ import useCalcuateDistance from "../../../../hooks/map/use-calculate-distance";
 import WayPointInfoStep from "../step/comp-way-points-info-step";
 import CarInfoStep from "../step/comp-car-info-setp";
 import { Gender } from "../../../../constants/app-common-const";
+import { useWayApi } from "../hook/use-way-api";
 
 const WayForm = ({ isEdit = false, data }) => {
     const {
@@ -60,7 +61,7 @@ const WayForm = ({ isEdit = false, data }) => {
         name: "waypoints"
     });
 
-    const { 
+    const {
         fields: carInfoFields,
         append: carInfoFieldsAppend,
         remove: carInfoFieldsRemove } = useFieldArray({
@@ -70,6 +71,7 @@ const WayForm = ({ isEdit = false, data }) => {
 
     const dispatch = useDispatch();
     const { isLoading, getLocationName, getDistanceBetweenPoints } = useLocationApi();
+    const { isLoading: submitLoading, saveWay } = useWayApi();
     const { isCalculating } = useCalcuateDistance(watch, setValue);
 
     const [openMap, setOpenMap] = useState(false);
@@ -79,7 +81,7 @@ const WayForm = ({ isEdit = false, data }) => {
         { value: unit.value, label: unit.label }
     ));
     const genderOptions = Object.values(Gender).map((gender) => (
-        {value: gender, label : gender}
+        { value: gender, label: gender }
     ));
 
     const steps = [
@@ -89,15 +91,101 @@ const WayForm = ({ isEdit = false, data }) => {
         "Summary"
     ];
 
-    const onSubmit = (data) => {
-        console.log(data);
-        console.log('click');
+    const onSubmit = async (formData) => {
+        try {
+            console.log(formData);
 
-        dispatch(
-            showErrorModal({
-                title: "Server Error",
-                message: "The server encountered an error. Please try again later."
-            }))
+            const body = new FormData();
+
+            body.append('title', formData.title || '');
+            body.append('description', formData.description || '');
+            body.append('totalDistance', formData.total_distance_value || ''); // Maps your state to backend field
+            body.append('totalDistanceUnit', formData.distance_unit || '');     // Maps your state to backend field
+
+            // 2. Start Point (Mapping your 'start' to backend 'startPoint')
+            body.append('startPoint.name', formData.start?.point_name || '');
+            body.append('startPoint.lat', formData.start?.latitude || '');
+            body.append('startPoint.lng', formData.start?.longitude || '');
+
+            // 3. End Point (Mapping your 'end' to backend 'endPoint')
+            body.append('endPoint.name', formData.end?.point_name || '');
+            body.append('endPoint.lat', formData.end?.latitude || '');
+            body.append('endPoint.lng', formData.end?.longitude || '');
+
+            // 4. Waypoints Array (Transforming dot notation to backend bracket notation)
+
+            formData.waypoints.forEach((wp, index) => {
+
+                body.append(`wayPoints[${index}].name`, wp?.point_name || '');
+                body.append(`wayPoints[${index}].lat`, wp?.latitude || '');
+                body.append(`wayPoints[${index}].lng`, wp?.longitude || '');
+            });
+
+
+            // 5. New Car Request Array
+
+            formData.car_infos?.forEach((car, index) => {
+                const spec = car.car_specification || {};
+                const driver = car.driver_info || {};
+
+                body.append(`newCarRequest[${index}].carInfoAndSpecification.carLicenseNumber`, spec.license_number || '');
+                body.append(`newCarRequest[${index}].carInfoAndSpecification.carModel`, spec.car_model || '');
+                body.append(`newCarRequest[${index}].carInfoAndSpecification.capacity`, spec.capacity || '');
+                body.append(`newCarRequest[${index}].carInfoAndSpecification.amountPerUnit`, spec.amount_per_unit || '');
+                body.append(`newCarRequest[${index}].carInfoAndSpecification.unit`, spec.distance_unit || '');
+
+                if (car.car_specification?.license_photo?.[index]) {
+                    body.append(`newCarRequest[${index}].carInfoAndSpecification.carLicenseNumberPhoto`, spec.license_photo[0]);
+                }
+                if (car.car_specification?.car_photo?.[index]) {
+                    body.append(`newCarRequest[${index}].carInfoAndSpecification.carPhoto`, spec.car_photo[0]);
+                }
+
+                body.append(`newCarRequest[${index}].driverInfo.name`, driver.name || '');
+                body.append(`newCarRequest[${index}].driverInfo.dob`, driver.dob || '');
+                body.append(`newCarRequest[${index}].driverInfo.gender`, driver.gender || '');
+                body.append(`newCarRequest[${index}].driverInfo.phone`, driver.phone || '');
+                body.append(`newCarRequest[${index}].driverInfo.nrc`, driver.nrc || '');
+                body.append(`newCarRequest[${index}].driverInfo.driverLicenseNumber`, driver.driverLicenseNumber || '');
+
+                // D. Driver Info Images (Extract from FileList array)
+                if (car.driver_info?.nrcCardPhoto?.[index]) {
+                    body.append(`newCarRequest[${index}].driverInfo.nrcCardPhoto`, driver.nrcCardPhoto[0]);
+                }
+                if (car.driver_info?.driverLicensePhoto?.[index]) {
+                    body.append(`newCarRequest[${index}].driverInfo.driverLicensePhoto`, driver.driverLicensePhoto[0]);
+                }
+                if (car.driver_info?.driverProfilePhoto?.[index]) {
+                    body.append(`newCarRequest[${index}].driverInfo.driverProfilePhoto`, driver.driverProfilePhoto[0]);
+                }
+            });
+
+
+            // // Debug point: See how your FormData payload looks before sending
+            // for (let pair of body.entries()) {
+            //     console.log(pair[0] + ': ', pair[1]);
+            // }
+
+            await saveWay(body, {
+                onSuccess: (data) => {
+                    console.log("Way created successfully!", data);
+                    dispatch(showErrorModal({
+                        title: "Way created Successfully",
+                        message: data?.payload?.message
+                    }))
+                },
+                onError: (error) => {
+                    // Optional: Component-specific error tracking (useApi already pops up the modal)
+                    console.error("Submission failed at component level:", error);
+                }
+            });
+
+            console.log("Uploaded successfully!");
+
+        } catch (error) {
+            console.error("Submission failed", error);
+            dispatch(showErrorModal({ message: "Something went wrong sending form data." }));
+        }
     }
 
 
@@ -137,12 +225,12 @@ const WayForm = ({ isEdit = false, data }) => {
                 fieldsToValidate = [
                     'title',
                     'description',
-                    'start_point_name',
-                    'start_latitude',
-                    'start_longitude',
-                    'end_point_name',
-                    'end_latitude',
-                    'end_longitude',
+                    'start.point_name',
+                    'start.latitude',
+                    'start.longitude',
+                    'end.point_name',
+                    'end.latitude',
+                    'end.longitude',
                     'total_distance_value',
                     'distance_unit'
                 ];
@@ -153,8 +241,8 @@ const WayForm = ({ isEdit = false, data }) => {
             case 2:
                 fieldsToValidate = ['car_infos'];
                 break;
-            
-            
+
+
 
         };
 
@@ -247,6 +335,7 @@ const WayForm = ({ isEdit = false, data }) => {
                         />
                     ) : (
                         <AppSubmitButton
+                            loading={submitLoading}
                             name={'Submit'}
                             className={'w-44 text-white'}
                             onClick={handleSubmit(onSubmit)}
